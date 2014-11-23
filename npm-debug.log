@@ -1,0 +1,20 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/home/viku/local/bin/node',
+1 verbose cli   '/home/viku/local/bin/npm',
+1 verbose cli   'install' ]
+2 info using npm@1.4.28
+3 info using node@v0.10.33
+4 verbose config Skipping project config: /home/viku/.npmrc. (matches userconfig)
+5 error install Couldn't read dependencies
+6 error package.json ENOENT, open '/home/viku/package.json'
+6 error package.json This is most likely not a problem with npm itself.
+6 error package.json npm can't find a package.json file in your current directory.
+7 error System Linux 3.2.0-23-generic
+8 error command "/home/viku/local/bin/node" "/home/viku/local/bin/npm" "install"
+9 error cwd /home/viku/node
+10 error node -v v0.10.33
+11 error npm -v 1.4.28
+12 error path /home/viku/package.json
+13 error code ENOPACKAGEJSON
+14 error errno 34
+15 verbose exit [ 34, true ]
