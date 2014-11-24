@@ -42,6 +42,10 @@ var isValidPassword = function(user, password){
   return bCrypt.compareSync(password, user.password);
 }
 
+var createHash = function(password){
+ return bCrypt.hashSync(password, bCrypt.genSaltSync(10), null);
+}
+
 passport.use('login', new LocalStrategy({
     passReqToCallback : true
   },
@@ -50,7 +54,6 @@ passport.use('login', new LocalStrategy({
     var users = db.get('users')
     users.findOne({ 'username' :  username }, 
       function(err, user) {
-        console.log("*************" + err);
         // In case of any error, return using the done method
         if (err)
           return done(err);
@@ -74,6 +77,48 @@ passport.use('login', new LocalStrategy({
 }));
 
 
+passport.use('signup', new LocalStrategy({
+    passReqToCallback : true
+  },
+  function(req, username, password, done) {
+    //findOrCreateUser = function(){
+      // find a user in Mongo with provided username
+      var users = db.get('users')
+      users.findOne({'username':username},function(err, user) {
+        // In case of any error return
+        if (err){
+          console.log('Error in SignUp: '+err);
+          return done(err);
+        }
+        // already exists
+        if (user) {
+          console.log('User already exists');
+          return done(null, false, 
+          req.flash('message','User Already Exists'));
+        } else {
+          // if there is no user with that email
+          // create the user
+          users.insert({"username":username,"password":createHash(password),"name":req.param('name'),"role": req.param('role')},
+            function (err, doc) {
+             if (err){
+              console.log('Error in Saving user: '+err);  
+              throw err;  
+             }
+             console.log('User Registration succesful');    
+             return done(null, newUser);
+            });
+        }
+      });
+    //};
+     
+    // Delay the execution of findOrCreateUser and execute 
+    // the method in the next tick of the event loop
+    //process.nextTick(findOrCreateUser);
+  })
+);
+
+
+// Passport end
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -86,12 +131,10 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-
-
 app.use(function(req, res, next) {
     req.db = db
     next();
-}); 
+});
 app.use('/', routes);
 app.use('/users', users);
 

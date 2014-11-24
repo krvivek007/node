@@ -1,0 +1,18 @@
+extends layout
+
+block content
+  form(role='form', action="/signup",method="post")
+      .form-group
+          input.form-control(type='text', name="username", placeholder='Enter Username')
+      .form-group
+        input.form-control(type='password', name="password", placeholder='Password')
+      .form-group
+          input.form-control(type='text', name="name", placeholder='Enter Name')
+      .form-group
+          input.form-control(type='text', name="role", placeholder='Enter Role')
+      button.btn.btn-default(type='submit') Submit
+      &nbsp;
+      a(href='/')
+        button.btn.btn-primary(type="button") Cancel
+    
+    h4= info
